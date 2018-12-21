@@ -2,17 +2,17 @@
 library(data.table)
 library(tidyverse)
 setwd("C:\\Users\\AM\\Desktop\\HR\\Forest_revised")
-hr<-as.tibble(fread("HR_comma_sep.txt")) ##¶ÁÈëÊı¾İ£¬tibbleÊÇdata.frameµÄÒ»ÖÖ£¬µ«½á¹¹¸ü½ô´Õ¡¢¼ò½à,ÆäÖĞfread£¨£©Ïàµ±ÓÚread.table()
-glimpse(hr) ##¹¦ÄÜÀàËÆÓÚprint(),ÓÃÓÚÁË½âÊı¾İµÄ´óÖÂ½á¹¹,Ò²¿ÉÓÃstr()
-sapply(hr,function(x){sum(is.na(x))}) ##²éÑ¯ÊÇ·ñÓĞÈ±Ê§Öµ£¬²¢·µ»ØÈ±Ê§ÖµµÄÊıÁ¿
+hr<-as.tibble(fread("HR_comma_sep.txt")) ##è¯»å…¥æ•°æ®ï¼Œtibbleæ˜¯data.frameçš„ä¸€ç§ï¼Œä½†ç»“æ„æ›´ç´§å‡‘ã€ç®€æ´,å…¶ä¸­freadï¼ˆï¼‰ç›¸å½“äºread.table()
+glimpse(hr) ##åŠŸèƒ½ç±»ä¼¼äºprint(),ç”¨äºäº†è§£æ•°æ®çš„å¤§è‡´ç»“æ„,ä¹Ÿå¯ç”¨str()
+sapply(hr,function(x){sum(is.na(x))}) ##æŸ¥è¯¢æ˜¯å¦æœ‰ç¼ºå¤±å€¼ï¼Œå¹¶è¿”å›ç¼ºå¤±å€¼çš„æ•°é‡
 
-####Step 2:Data pre-processing (ÓÃÓÚ½«Êı¾İÁ¿»¯&Òò×Ó»¯£¬·½±ã×ö²îÒì·ÖÎö)
-hr$BusinessTravel<-recode(hr$BusinessTravel,"Non_Travel"="0","Travel_Rarely"="1","Travel_Frequently"="2") ##Êı¾İÒò×Ó»¯£¬½«Ë®Æ½Öµ¸³Öµ
+####Step 2:Data pre-processing (ç”¨äºå°†æ•°æ®é‡åŒ–&å› å­åŒ–ï¼Œæ–¹ä¾¿åšå·®å¼‚åˆ†æ)
+hr$BusinessTravel<-recode(hr$BusinessTravel,"Non_Travel"="0","Travel_Rarely"="1","Travel_Frequently"="2") ##æ•°æ®å› å­åŒ–ï¼Œå°†æ°´å¹³å€¼èµ‹å€¼
 hr$Gender<-recode(hr$Gender,"Male"="0","Female"="1")
 hr$MaritalStatus<-recode(hr$MaritalStatus,"Single"="0","Married"="1","Divorced"="2")
 hr$OverTime<-recode(hr$OverTime,"Yes"="1","No"="0")
 hr$Attrition<-recode(hr$Attrition,'Yes'="1",'No'="0")
-hr$Department<-as.factor(hr$Department) ##²¿·ÖÎŞ·¨Á¿»¯µÄÊı¾İÒò×Ó»¯
+hr$Department<-as.factor(hr$Department) ##éƒ¨åˆ†æ— æ³•é‡åŒ–çš„æ•°æ®å› å­åŒ–
 hr$EducationField<-as.factor(hr$EducationField)
 hr$JobRole<-as.factor(hr$JobRole)
 hr$Over18<-as.factor(hr$Over18)
@@ -20,13 +20,13 @@ hr$Over18<-as.factor(hr$Over18)
 
 ####Step 3:Correlation between different Variable Value
 library(corrplot)
-cor.hr<-hr %>% select(-Department,-EducationField,-JobRole,-Over18,-EmployeeCount,-StandardHours) ##È¥³ıÎŞ·¨Á¿»¯µÄÊı¾İÒÔ¼°Ã»ÓĞ±ê×¼²îµÄÊı¾İ
-cor.hr$BusinessTravel<-as.numeric(cor.hr$BusinessTravel) ##½«Òò×Ó±äÁ¿×ª»»ÎªÊı¾İĞÍ
+cor.hr<-hr %>% select(-Department,-EducationField,-JobRole,-Over18,-EmployeeCount,-StandardHours) ##å»é™¤æ— æ³•é‡åŒ–çš„æ•°æ®ä»¥åŠæ²¡æœ‰æ ‡å‡†å·®çš„æ•°æ®
+cor.hr$BusinessTravel<-as.numeric(cor.hr$BusinessTravel) ##å°†å› å­å˜é‡è½¬æ¢ä¸ºæ•°æ®å‹
 cor.hr$Gender<-as.numeric(cor.hr$Gender)
 cor.hr$MaritalStatus<-as.numeric(cor.hr$MaritalStatus)
 cor.hr$OverTime<-as.numeric(cor.hr$OverTime)
 cor.hr$Attrition<-as.numeric(cor.hr$Attrition)
-pdf(file="correlation of all group.pdf",width = 50,height=50) ##type±íÊ¾ÏÂÈı½ÇµÄÕûÌåĞÎ×´£¬method±íÊ¾ĞÎ×´Îª·½ĞÎ,order±íÊ¾ÌØÕ÷ÏòÁ¿µÄË³Ğò
+pdf(file="correlation of all group.pdf",width = 50,height=50) ##typeè¡¨ç¤ºä¸‹ä¸‰è§’çš„æ•´ä½“å½¢çŠ¶ï¼Œmethodè¡¨ç¤ºå½¢çŠ¶ä¸ºæ–¹å½¢,orderè¡¨ç¤ºç‰¹å¾å‘é‡çš„é¡ºåº
 corrplot(corr = cor(cor.hr),bg = "white", mar=c(30,2,2,2),title = "correlations",order = "AOE",type="upper",tl.pos = "d")
 corrplot(corr = cor(cor.hr),add=TRUE, type="lower", method="number",order="AOE",diag=FALSE,tl.pos="n", cl.pos="n",cex=1,cex.axis=2)
 dev.off()
@@ -38,7 +38,7 @@ chart.Correlation(cor(cor.hr.new),method = "pearson")
 dev.off()
 
 ####Step 4:EDA,Exploratory Data Analysis
-library(ggplot2) ##Ê¹ÓÃggplot2°ü»æÖÆÍ³¼Æ·ÖÎöÍ¼
+library(ggplot2) ##ä½¿ç”¨ggplot2åŒ…ç»˜åˆ¶ç»Ÿè®¡åˆ†æå›¾
 library(plotly)
 pdf(file="Number of people in different occupations.pdf")
 ggplot(group_by(hr,JobRole),aes(x=JobRole,fill=JobRole))+geom_bar(width = 1)+coord_polar(theta = "x")+ggtitle("Number of people in different occupations")
@@ -55,10 +55,10 @@ ggplot(hr,aes(x=JobRole,y=JobLevel,fill=Attrition))+geom_boxplot()+ggtitle("Job 
 dev.off()
 
 ####Step 5:The relationship between variant and attribution
-ggplot(hr,aes(x=TotalWorkingYears,color=Attrition))+geom_line(stat = "density")+ggtitle("×Ü¹¤×÷ÄêÊıºÍÀëÖ°µÄ¹ØÏµ")
-ggplot(hr,aes(x=JobLevel,fill=Attrition))+geom_histogram(stat="count")+ggtitle("¹¤×÷Ë®Æ½ºÍÀëÖ°µÄ¹ØÏµ")
-#ggplot(hr,aes(x=promotion_last_5years,fill=left))+geom_histogram(stat="count")+ggtitle("½ü5ÄêÉıÖµºÍÀëÖ°µÄ¹ØÏµ")
-#ggplot(hr,aes(x=last_evaluation,color=left))+geom_point(stat = "count")+ggtitle("×îºóÒ»´ÎÆÀ¼ÛºÍÀëÖ°µÄ¹ØÏµ")
+ggplot(hr,aes(x=TotalWorkingYears,color=Attrition))+geom_line(stat = "density")+ggtitle("æ€»å·¥ä½œå¹´æ•°å’Œç¦»èŒçš„å…³ç³»")
+ggplot(hr,aes(x=JobLevel,fill=Attrition))+geom_histogram(stat="count")+ggtitle("å·¥ä½œæ°´å¹³å’Œç¦»èŒçš„å…³ç³»")
+#ggplot(hr,aes(x=promotion_last_5years,fill=left))+geom_histogram(stat="count")+ggtitle("è¿‘5å¹´å‡å€¼å’Œç¦»èŒçš„å…³ç³»")
+#ggplot(hr,aes(x=last_evaluation,color=left))+geom_point(stat = "count")+ggtitle("æœ€åä¸€æ¬¡è¯„ä»·å’Œç¦»èŒçš„å…³ç³»")
 #hr %>% group_by(sales) %>% ggplot(aes(x=sales,fill=Work_accident))+geom_bar()+coord_flip()+
 #theme(axis.text.x = element_blank(),axis.title.x = element_blank(),axis.title.y = element_blank())+scale_fill_discrete(labels=c("no accident","at least once"))
 
@@ -66,7 +66,7 @@ ggplot(hr,aes(x=JobLevel,fill=Attrition))+geom_histogram(stat="count")+ggtitle("
 library(pROC)
 library(caret)
 library(randomForest)
-cor.hr$Attrition<-as.factor(cor.hr$Attrition)#ĞèÒª×ª»»Êı¾İÀàĞÍ£¬·ñÔòÈİÒ×³öÏÖ±¨´í
+cor.hr$Attrition<-as.factor(cor.hr$Attrition)#éœ€è¦è½¬æ¢æ•°æ®ç±»å‹ï¼Œå¦åˆ™å®¹æ˜“å‡ºç°æŠ¥é”™
 index<-sample(2,nrow(cor.hr),replace = T,prob = c(0.7,0.3))
 train<-cor.hr[index==1,];test<-cor.hr[index==2,]
 model<-randomForest(Attrition~.,data = train)
